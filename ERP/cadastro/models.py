@@ -67,10 +67,15 @@ class Cota(models.Model):       # TODO refazer __str__
     # dt_retira = models.DateField TODO resultante
     principal = models.ForeignKey(Pessoa, related_name='cota', null=False, on_delete=models.PROTECT)
     # TODO implementar pessoa principal obrigatória
-    outros = models.ManyToManyField(Pessoa, related_name='cota_outros')     # TODO remover pessoa principal da lista
+    outros = models.ManyToManyField(Pessoa,
+                                    related_name='cota_outros',
+                                    null=True)     # TODO remover pessoa principal da lista
 
     def __str__(self):
-        return self.principal
+        if Cota.objects.filter(principal__apelido=self.principal).count() == 1:
+            return self.principal
+        else:   # TODO mudar para a desc de tipo e status
+            return "%s - %s - %s" %(self.principal, self.tipo, self.status)
 
 
 class ComCota(models.Model):     # TODO inserir no admin de Cota

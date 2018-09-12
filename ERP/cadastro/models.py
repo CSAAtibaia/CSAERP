@@ -53,7 +53,7 @@ class ComPessoa(models.Model): # TODO inserir no admin de pessoa
         ordering = ('dt_com',)
 
 
-class Cota(models.Model):
+class Cota(models.Model):       # TODO refazer __str__
     tipo = models.CharField(choices=TIPO, max_length=50)
     status = models.CharField(choices=STATUS, max_length=50)
     partilha = models.CharField(choices=PARTILHA, max_length=50)
@@ -66,6 +66,9 @@ class Cota(models.Model):
     dt_retira = models.DateField
     principal = Pessoa      # TODO implementar pessoa principal obrigatória
     outros = models.ManyToManyField(Pessoa) # TODO remover pessoa principal da lista
+
+    def __str__(self):
+        return "%s - %s" % (self.pk, self.dt_ini)
 
 
 class ComCota(models.Model): # TODO inserir no admin de Cota

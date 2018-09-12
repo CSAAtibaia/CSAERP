@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import date
+from django.contrib.auth.models import User
 # Create your models here.
 
 
@@ -23,15 +24,15 @@ def get_validade_default():
 
 
 class Pessoa(models.Model):     # TODO Obrigatoriedades
-    prim_nome = models.CharField('Nome', max_length=50)
+    prim_nome = models.CharField('Nome', max_length=50) # TODO controlar duplicidade
     sobrenome = models.CharField('Sobrenome', max_length=100)
     dt_nascimento = models.DateField('Data de Nascimento')
-    apelido = models.CharField('Apelido', max_length=50)
+    apelido = models.CharField('Apelido', max_length=50, unique=True, null=True)
     rg = models.PositiveIntegerField('RG')  # TODO RG formato validar dígito
     cpf = models.BigIntegerField('CPF')     # TODO CPF formato validar dígito
-    profissao = models.CharField('Profissão', max_length=300)
-    telefone = models.BigIntegerField('Telefone')
-    email = models.EmailField('E-mail')
+    profissao = models.CharField('Profissão', max_length=300, null=True)
+    telefone = models.BigIntegerField('Telefone', null=True)
+    email = models.EmailField('E-mail', null=True)
 
     def __str__(self):
         if self.apelido == '':
@@ -40,11 +41,11 @@ class Pessoa(models.Model):     # TODO Obrigatoriedades
             return self.apelido
 
 
-class ComPessoa(models.Model): # TODO inserir no admin de pessoa
-    comentario = models.CharField
-    #user
+class ComPessoa(models.Model):   # TODO inserir no admin de pessoa
+    comentario = models.CharField(max_length=255, default='Insira seu comentário')  # TODO impedir edit
+    user = models.ForeignKey(User, related_name='compessoauser', on_delete=models.PROTECT, default=0)
     dt_com = models.DateTimeField(auto_now_add=True)
-    fk_pessoa = models.ForeignKey(Pessoa, on_delete=models.CASCADE)
+    fk_pessoa = models.ForeignKey(Pessoa, on_delete=models.CASCADE, related_name='compessoa')
 
     def __str__(self):
         return self.comentario
@@ -59,23 +60,24 @@ class Cota(models.Model):       # TODO refazer __str__
     partilha = models.CharField(choices=PARTILHA, max_length=50)
     higieniza = models.BooleanField(default=False)
     dt_ini = models.DateField(default=date.today)
-    dt_ini_desliga = models.DateField
-    dt_ini_susp = models.DateField
-    dt_fim = models.DateField
+    # dt_ini_desliga = models.DateField TODO resultante
+    # dt_ini_susp = models.DateField TODO resultante
+    # dt_fim = models.DateField TODO resultante
     dt_validade = models.DateField
-    dt_retira = models.DateField
-    principal = Pessoa      # TODO implementar pessoa principal obrigatória
-    outros = models.ManyToManyField(Pessoa) # TODO remover pessoa principal da lista
+    # dt_retira = models.DateField TODO resultante
+    principal = models.ForeignKey(Pessoa, related_name='cota', null=False, on_delete=models.PROTECT)
+    # TODO implementar pessoa principal obrigatória
+    outros = models.ManyToManyField(Pessoa, related_name='cota_outros')     # TODO remover pessoa principal da lista
 
     def __str__(self):
-        return "%s - %s" % (self.pk, self.dt_ini)
+        return self.principal
 
 
-class ComCota(models.Model): # TODO inserir no admin de Cota
-    comentario = models.CharField
-    #user
+class ComCota(models.Model):     # TODO inserir no admin de Cota
+    comentario = models.CharField(max_length=255, default='Insira seu comentário')  # TODO impedir edit
+    user = models.ForeignKey(User, related_name='comcotauser', on_delete=models.PROTECT, default=0)
     dt_com = models.DateTimeField(auto_now_add=True)
-    fk_cota = models.ForeignKey(Cota, on_delete=models.CASCADE)
+    fk_cota = models.ForeignKey(Cota, related_name='comcota', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.comentario

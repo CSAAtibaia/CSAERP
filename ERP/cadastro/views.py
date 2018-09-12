@@ -1,11 +1,15 @@
 from django.shortcuts import render
-
+from django.db.models import Count
 # Create your views here.
 
 from django.http import HttpResponse
 from .models import Cota
 
+
 def index(request):
-    lista_cotas = Cota.objects.order_by('-dt_ini')
-    output = ', '.join([c.cota_text for c in lista_cotas])
+    status = ['A', 'P']
+    output = Cota.objects.filter(status__in=status) \
+        .values('partilha', 'tipo') \
+        .annotate(cotas=Count('tipo')) \
+        .order_by('partilha', 'tipo')
     return HttpResponse(output)

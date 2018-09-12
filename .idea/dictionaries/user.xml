@@ -2,16 +2,23 @@
   <dictionary name="user">
     <words>
       <w>apelido</w>
+      <w>apoiador</w>
       <w>atibaia</w>
       <w>ativo</w>
       <w>aviso</w>
+      <w>bolsista</w>
       <w>cadastro</w>
       <w>comentario</w>
       <w>cota</w>
+      <w>cotas</w>
+      <w>cotista</w>
       <w>desliga</w>
+      <w>dígito</w>
+      <w>formato</w>
       <w>higieniza</w>
       <w>implementar</w>
       <w>inativo</w>
+      <w>inserir</w>
       <w>lista</w>
       <w>nascimento</w>
       <w>nota</w>
@@ -20,17 +27,22 @@
       <w>obrigatória</w>
       <w>outros</w>
       <w>partilha</w>
+      <w>permuta</w>
       <w>pessoa</w>
       <w>profissao</w>
       <w>profissão</w>
       <w>prévio</w>
+      <w>refazer</w>
+      <w>resultante</w>
       <w>retira</w>
       <w>sobrenome</w>
       <w>susp</w>
       <w>suspenso</w>
       <w>telefone</w>
       <w>tipo</w>
+      <w>trabalhador</w>
       <w>validade</w>
+      <w>validar</w>
     </words>
   </dictionary>
 </component>

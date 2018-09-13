@@ -1,26 +1,33 @@
 from django.db import models
 from datetime import date
 from django.contrib.auth.models import User
+from .utils import ChoiceEnum
+
 # Create your models here.
-
-
-TIPO = {('C', 'Cotista'),
-        ('T', 'Trabalhador'),
-        ('B', 'Bolsista'),
-        ('A', 'Apoiador'),
-        ('P', 'Permuta')}
-
-STATUS = {('A', 'Ativo'),
-          ('I', 'Inativo'),
-          ('P', 'Aviso Prévio'),
-          ('S', 'Suspenso')}
-
-PARTILHA = {('A', 'Atibaia'),
-            ('S', 'São Paulo')}
 
 
 def get_validade_default():
     return True
+
+
+class Tipo(ChoiceEnum):
+    COTISTA = 'Cotista'
+    TRABALHADOR = 'Trabalhador'
+    BOLSISTA = 'Bolsista'
+    APOIADOR = 'Apoiador'
+    PERMUTA = 'Permuta'
+
+
+class Status(ChoiceEnum):
+    ATIVO = 'Ativo'
+    INATIVO = 'Inativo'
+    AVISO = 'Aviso Prévio'
+    SUSPENSO = 'Suspenso'
+
+
+class Partilha(ChoiceEnum):
+    ATIBAIA = 'Atibaia'
+    SAOPAULO = 'São Paulo'
 
 
 class Pessoa(models.Model):     # TODO Obrigatoriedades
@@ -55,9 +62,9 @@ class ComPessoa(models.Model):   # TODO inserir no admin de pessoa
 
 
 class Cota(models.Model):
-    tipo = models.CharField(choices=TIPO, max_length=1, default='C')
-    status = models.CharField(choices=STATUS, max_length=1, default='A')
-    partilha = models.CharField(choices=PARTILHA, max_length=2, default='A')
+    tipo = models.CharField(choices=Tipo.choices(), default=Tipo.COTISTA, max_length=15)
+    status = models.CharField(choices=Status.choices(), default=Status.ATIVO, max_length=15)
+    partilha = models.CharField(choices=Partilha.choices(), default=Partilha.ATIBAIA, max_length=15)
     higieniza = models.BooleanField(default=False)
     dt_ini = models.DateField(default=date.today)
     dt_validade = models.DateField
@@ -74,7 +81,7 @@ class Cota(models.Model):
         if Cota.objects.filter(principal__apelido=self.principal).count() == 1:
             return self.principal
         else:   # TODO mudar para a desc de tipo e status
-            return "%s - %s - %s" %(self.principal, self.tipo, self.status)
+            return "%s - %s - %s" % (self.principal, self.tipo, self.status)
 
 
 class ComCota(models.Model):     # TODO inserir no admin de Cota

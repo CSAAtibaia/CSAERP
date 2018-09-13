@@ -30,7 +30,7 @@ class Partilha(ChoiceEnum):
     SAOPAULO = 'São Paulo'
 
 
-class Pessoa(models.Model):     # TODO Obrigatoriedades
+class Pessoa(models.Model):
     prim_nome = models.CharField('Nome', max_length=50)  # TODO controlar duplicidade
     sobrenome = models.CharField('Sobrenome', max_length=100)
     dt_nascimento = models.DateField('Data de Nascimento')

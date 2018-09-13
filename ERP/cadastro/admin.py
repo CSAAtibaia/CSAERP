@@ -1,7 +1,16 @@
 # Register your models here.
 from django.contrib import admin
+from .models import Pessoa, Cota, ComCota, ComPessoa
 
-from .models import Pessoa, Cota
+
+class ComCotaInLine(admin.StackedInline):
+    model = ComCota
+    extra = 0
+
+
+class CotaAdmin(admin.ModelAdmin):
+    inlines = [ComCotaInLine]
+
 
 admin.site.register(Pessoa)
-admin.site.register(Cota)
+admin.site.register(Cota, CotaAdmin)

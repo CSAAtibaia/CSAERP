@@ -24,7 +24,7 @@ def get_validade_default():
 
 
 class Pessoa(models.Model):     # TODO Obrigatoriedades
-    prim_nome = models.CharField('Nome', max_length=50) # TODO controlar duplicidade
+    prim_nome = models.CharField('Nome', max_length=50)  # TODO controlar duplicidade
     sobrenome = models.CharField('Sobrenome', max_length=100)
     dt_nascimento = models.DateField('Data de Nascimento')
     apelido = models.CharField('Apelido', max_length=50, unique=True, null=True)
@@ -54,22 +54,21 @@ class ComPessoa(models.Model):   # TODO inserir no admin de pessoa
         ordering = ('dt_com',)
 
 
-class Cota(models.Model):       # TODO refazer __str__
-    tipo = models.CharField(choices=TIPO, max_length=50)
-    status = models.CharField(choices=STATUS, max_length=50)
-    partilha = models.CharField(choices=PARTILHA, max_length=50)
+class Cota(models.Model):
+    tipo = models.CharField(choices=TIPO, max_length=1, default='C')
+    status = models.CharField(choices=STATUS, max_length=1, default='A')
+    partilha = models.CharField(choices=PARTILHA, max_length=2, default='A')
     higieniza = models.BooleanField(default=False)
     dt_ini = models.DateField(default=date.today)
+    dt_validade = models.DateField
     # dt_ini_desliga = models.DateField TODO resultante
     # dt_ini_susp = models.DateField TODO resultante
     # dt_fim = models.DateField TODO resultante
-    dt_validade = models.DateField
     # dt_retira = models.DateField TODO resultante
     principal = models.ForeignKey(Pessoa, related_name='cota', null=False, on_delete=models.PROTECT)
-    # TODO implementar pessoa principal obrigatória
     outros = models.ManyToManyField(Pessoa,
-                                    related_name='cota_outros',
-                                    null=True)     # TODO remover pessoa principal da lista
+                                    related_name='cota_outros'
+                                    )     # TODO remover pessoa principal da lista
 
     def __str__(self):
         if Cota.objects.filter(principal__apelido=self.principal).count() == 1:

@@ -67,19 +67,20 @@ class Cota(models.Model):
     partilha = models.CharField(choices=Partilha.choices(), default=Partilha.ATIBAIA, max_length=15)
     higieniza = models.BooleanField(default=False)
     dt_ini = models.DateField(default=date.today)
-    dt_validade = models.DateField
+    dt_validade = models.DateField # TODO default = today + 1 ano
     # dt_ini_desliga = models.DateField TODO resultante
     # dt_ini_susp = models.DateField TODO resultante
     # dt_fim = models.DateField TODO resultante
     # dt_retira = models.DateField TODO resultante
     principal = models.ForeignKey(Pessoa, related_name='cota', null=False, on_delete=models.PROTECT)
     outros = models.ManyToManyField(Pessoa,
-                                    related_name='cota_outros'
+                                    related_name='cota_outros',
+                                    blank=True
                                     )     # TODO remover pessoa principal da lista
 
     def __str__(self):
-        if Cota.objects.filter(principal__apelido=self.principal).count() == 1:
-            return self.principal
+        if Cota.objects.filter(principal=self.principal).count() == 1:
+            return str(self.principal)
         else:   # TODO mudar para a desc de tipo e status
             return "%s - %s - %s" % (self.principal, self.tipo, self.status)
 

@@ -1,5 +1,5 @@
 from django.db import models
-from datetime import date # TODO , timedelta
+from datetime import date   # TODO , timedelta
 from django.contrib.auth.models import User
 from .utils import ChoiceEnum
 
@@ -30,16 +30,25 @@ class Partilha(ChoiceEnum):
     SAOPAULO = 'São Paulo'
 
 
+class Frenquencia(ChoiceEnum):
+    SEMANAL = 'Semanal'
+    MENSAL = 'Mensal'
+    BIMESTRAL = 'Bimestral'
+    TRIMESTRAL = 'Trimestral'
+    SEMESTRAL = 'Semestral'
+    ANUAL = 'Anual'
+
+
 class Pessoa(models.Model):
     prim_nome = models.CharField('Nome', max_length=50)  # TODO controlar duplicidade
     sobrenome = models.CharField('Sobrenome', max_length=100)
     dt_nascimento = models.DateField('Data de Nascimento')
-    apelido = models.CharField('Apelido', max_length=50, unique=True, null=True)
-    rg = models.PositiveIntegerField('RG', null=True)  # TODO RG formato validar dígito
-    cpf = models.BigIntegerField('CPF', null=True)     # TODO CPF formato validar dígito
-    profissao = models.CharField('Profissão', max_length=300, null=True)
-    telefone = models.BigIntegerField('Telefone', null=True)
-    email = models.EmailField('E-mail', null=True)
+    apelido = models.CharField('Apelido', max_length=50, unique=True, null=True, blank=True)
+    rg = models.PositiveIntegerField('RG', null=True, blank=True)  # TODO RG formato validar dígito
+    cpf = models.BigIntegerField('CPF', null=True, blank=True)     # TODO CPF formato validar dígito
+    profissao = models.CharField('Profissão', max_length=300, null=True, blank=True)
+    telefone = models.BigIntegerField('Telefone', null=True, blank=True)
+    email = models.EmailField('E-mail', null=True, blank=True)
 
     def __str__(self):
         if self.apelido == '':
@@ -65,18 +74,39 @@ class ComPessoa(models.Model):
         ordering = ('dt_com',)
 
 
+class Servico(models.Model):
+    servico = models.CharField('Serviço', max_length=100, unique=True)
+    descricao = models.CharField('Descrição', max_length=255, null=True, blank=True)
+    valor = models.DecimalField('Valor', max_digits=6, decimal_places=2)
+    frequencia = models.CharField('Frequência',
+                                  max_length=15,
+                                  choices=Frenquencia.choices(),
+                                  default=Frenquencia.MENSAL)
+    valor_adesao = models.DecimalField('Valor Adesão', max_digits=6, decimal_places=2, blank=True, null=True)
+    max_adesao = models.PositiveIntegerField('Max', blank=True, null=True)
+    email = models.EmailField('E-Mail', null=True, blank=True)
+    referencia = models.CharField('Referência', max_length=100, unique=True, blank=True, null=True)
+    duracao_padrao = models.PositiveSmallIntegerField('Duração', blank=True, null=True)
+
+    def __str__(self):
+        return self.servico
+
+
 class Cota(models.Model):
     tipo = models.CharField('Tipo', choices=Tipo.choices(), default=Tipo.COTISTA, max_length=15)
     status = models.CharField('Status', choices=Status.choices(), default=Status.ATIVO, max_length=15)
     partilha = models.CharField('Partilha', choices=Partilha.choices(), default=Partilha.ATIBAIA, max_length=15)
     higieniza = models.BooleanField('Higieniza', default=False)
     dt_ini = models.DateField('Início', default=date.today)
-    dt_validade = models.DateField('Validade', default=get_validade_default)  # TODO default = today + 1 ano
+    dt_validade = models.DateField('Validade', default=get_validade_default)  # TODO default = today + X
     # dt_ini_desliga = models.DateField TODO resultante
     # dt_ini_susp = models.DateField TODO resultante
     # dt_fim = models.DateField TODO resultante
     # dt_retira = models.DateField TODO resultante
-    principal = models.ForeignKey(Pessoa, related_name='cota', null=False, on_delete=models.PROTECT)
+    principal = models.ForeignKey(Pessoa,   # TODO validar/restringir q Pessoa escolhida tem rg/cpf
+                                  related_name='cota',
+                                  null=False,
+                                  on_delete=models.PROTECT)
     outros = models.ManyToManyField(Pessoa,
                                     related_name='cota_outros',
                                     blank=True
@@ -85,8 +115,11 @@ class Cota(models.Model):
     def __str__(self):
         if Cota.objects.filter(principal=self.principal).count() == 1:
             return str(self.principal)
-        else:   # TODO mudar para a desc de tipo e status
-            return "%s - %s - %s" % (self.principal, self.tipo, self.status)
+        else:
+            return "%s - %s - %s" % (self.principal,
+                                     self.get_tipo_display(),
+                                     self.get_status_display()
+                                     )
 
 
 class ComCota(models.Model):
@@ -103,4 +136,18 @@ class ComCota(models.Model):
         return self.comentario
 
     class Meta:
-        ordering = ('dt_com',)
+        ordering = ('-dt_com',)
+
+
+class Assinatura(models.Model):
+    cota = models.ForeignKey(Cota,
+                             related_name='assinatura',
+                             null=False,
+                             on_delete=models.PROTECT)
+    servico = models.ForeignKey(Servico,    # TODO somente um serviço / tipo / cota ativo
+                                related_name='assinatura',
+                                null=False,
+                                on_delete=models.PROTECT)
+    dt_ini = models.DateField('Início', default=date.today)
+    dt_validade = models.DateField('Validade', default=get_validade_default)  # TODO default = today + X
+    obs = models.TextField('Observações', blank=True, null=True)

@@ -30,7 +30,7 @@ class Partilha(ChoiceEnum):
     SAOPAULO = 'São Paulo'
 
 
-class Pessoa(models.Model):     # TODO Obrigatoriedades
+class Pessoa(models.Model):
     prim_nome = models.CharField('Nome', max_length=50)  # TODO controlar duplicidade
     sobrenome = models.CharField('Sobrenome', max_length=100)
     dt_nascimento = models.DateField('Data de Nascimento')
@@ -48,9 +48,13 @@ class Pessoa(models.Model):     # TODO Obrigatoriedades
             return self.apelido
 
 
-class ComPessoa(models.Model):   # TODO inserir no admin de pessoa
-    comentario = models.CharField(max_length=255, default='Insira seu comentário')  # TODO impedir edit
-    user = models.ForeignKey(User, related_name='compessoauser', on_delete=models.PROTECT, default=0)
+class ComPessoa(models.Model):
+    comentario = models.TextField(default='Insira seu comentário')  # TODO impedir edit
+    # TODO arquivo = models.FileField
+    user = models.ForeignKey(User,  # TODO obrigar a ser o usuário atual
+                             related_name='compessoauser',
+                             on_delete=models.PROTECT,
+                             default=0)
     dt_com = models.DateTimeField(auto_now_add=True)
     fk_pessoa = models.ForeignKey(Pessoa, on_delete=models.CASCADE, related_name='compessoa')
 
@@ -85,9 +89,13 @@ class Cota(models.Model):
             return "%s - %s - %s" % (self.principal, self.tipo, self.status)
 
 
-class ComCota(models.Model):     # TODO inserir no admin de Cota
-    comentario = models.CharField(max_length=255, default='Insira seu comentário')  # TODO impedir edit
-    user = models.ForeignKey(User, related_name='comcotauser', on_delete=models.PROTECT, default=0)
+class ComCota(models.Model):
+    comentario = models.TextField(default='Insira seu comentário')  # TODO impedir edit
+    # TODO arquivo = models.FileField
+    user = models.ForeignKey(User,  # TODO obrigar a ser o usuário atual
+                             related_name='comcotauser',
+                             on_delete=models.PROTECT,
+                             default=0)
     dt_com = models.DateTimeField(auto_now_add=True)
     fk_cota = models.ForeignKey(Cota, related_name='comcota', on_delete=models.CASCADE)
 

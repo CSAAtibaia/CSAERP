@@ -49,8 +49,11 @@ class Pessoa(models.Model):
 
 
 class ComPessoa(models.Model):   # TODO inserir no admin de pessoa
-    comentario = models.CharField(max_length=255, default='Insira seu comentário')  # TODO impedir edit
-    user = models.ForeignKey(User, related_name='compessoauser', on_delete=models.PROTECT, default=0)
+    comentario = models.TextField(default='Insira seu comentário')  # TODO impedir edit
+    user = models.ForeignKey(User, # TODO obrigar a ser o usuário atual
+                             related_name='compessoauser',
+                             on_delete=models.PROTECT,
+                             default=0)
     dt_com = models.DateTimeField(auto_now_add=True)
     fk_pessoa = models.ForeignKey(Pessoa, on_delete=models.CASCADE, related_name='compessoa')
 
@@ -86,8 +89,11 @@ class Cota(models.Model):
 
 
 class ComCota(models.Model):     # TODO inserir no admin de Cota
-    comentario = models.CharField(max_length=255, default='Insira seu comentário')  # TODO impedir edit
-    user = models.ForeignKey(User, related_name='comcotauser', on_delete=models.PROTECT, default=0)
+    comentario = models.TextField(default='Insira seu comentário')  # TODO impedir edit
+    user = models.ForeignKey(User, # TODO obrigar a ser o usuário atual
+                             related_name='comcotauser',
+                             on_delete=models.PROTECT,
+                             default=0)
     dt_com = models.DateTimeField(auto_now_add=True)
     fk_cota = models.ForeignKey(Cota, related_name='comcota', on_delete=models.CASCADE)
 

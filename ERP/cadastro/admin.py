@@ -4,6 +4,7 @@ from .models import Pessoa, Cota, ComCota, ComPessoa
 
 
 class ComCotaInLine(admin.StackedInline):
+    fields = ['comentario']
     model = ComCota
     extra = 0
 

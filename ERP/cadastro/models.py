@@ -48,9 +48,10 @@ class Pessoa(models.Model):
             return self.apelido
 
 
-class ComPessoa(models.Model):   # TODO inserir no admin de pessoa
+class ComPessoa(models.Model):
     comentario = models.TextField(default='Insira seu comentário')  # TODO impedir edit
-    user = models.ForeignKey(User, # TODO obrigar a ser o usuário atual
+    # TODO arquivo = models.FileField
+    user = models.ForeignKey(User,  # TODO obrigar a ser o usuário atual
                              related_name='compessoauser',
                              on_delete=models.PROTECT,
                              default=0)
@@ -88,9 +89,10 @@ class Cota(models.Model):
             return "%s - %s - %s" % (self.principal, self.tipo, self.status)
 
 
-class ComCota(models.Model):     # TODO inserir no admin de Cota
+class ComCota(models.Model):
     comentario = models.TextField(default='Insira seu comentário')  # TODO impedir edit
-    user = models.ForeignKey(User, # TODO obrigar a ser o usuário atual
+    # TODO arquivo = models.FileField
+    user = models.ForeignKey(User,  # TODO obrigar a ser o usuário atual
                              related_name='comcotauser',
                              on_delete=models.PROTECT,
                              default=0)

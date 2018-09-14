@@ -1,5 +1,5 @@
 from django.db import models
-from datetime import date # TODO , timedelta
+from datetime import date   # TODO , timedelta
 from django.contrib.auth.models import User
 from .utils import ChoiceEnum
 
@@ -76,7 +76,10 @@ class Cota(models.Model):
     # dt_ini_susp = models.DateField TODO resultante
     # dt_fim = models.DateField TODO resultante
     # dt_retira = models.DateField TODO resultante
-    principal = models.ForeignKey(Pessoa, related_name='cota', null=False, on_delete=models.PROTECT)
+    principal = models.ForeignKey(Pessoa,   # TODO validar/restringir q Pessoa escolhida tem rg/cpf
+                                  related_name='cota',
+                                  null=False,
+                                  on_delete=models.PROTECT)
     outros = models.ManyToManyField(Pessoa,
                                     related_name='cota_outros',
                                     blank=True

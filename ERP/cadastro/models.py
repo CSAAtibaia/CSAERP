@@ -1,5 +1,5 @@
 from django.db import models
-from datetime import date
+from datetime import date # TODO , timedelta
 from django.contrib.auth.models import User
 from .utils import ChoiceEnum
 
@@ -7,7 +7,7 @@ from .utils import ChoiceEnum
 
 
 def get_validade_default():
-    return True
+    return date.today   # TODO + timedelta(days=365)
 
 
 class Tipo(ChoiceEnum):
@@ -35,8 +35,8 @@ class Pessoa(models.Model):
     sobrenome = models.CharField('Sobrenome', max_length=100)
     dt_nascimento = models.DateField('Data de Nascimento')
     apelido = models.CharField('Apelido', max_length=50, unique=True, null=True)
-    rg = models.PositiveIntegerField('RG')  # TODO RG formato validar dígito
-    cpf = models.BigIntegerField('CPF')     # TODO CPF formato validar dígito
+    rg = models.PositiveIntegerField('RG', null=True)  # TODO RG formato validar dígito
+    cpf = models.BigIntegerField('CPF', null=True)     # TODO CPF formato validar dígito
     profissao = models.CharField('Profissão', max_length=300, null=True)
     telefone = models.BigIntegerField('Telefone', null=True)
     email = models.EmailField('E-mail', null=True)
@@ -66,12 +66,12 @@ class ComPessoa(models.Model):
 
 
 class Cota(models.Model):
-    tipo = models.CharField(choices=Tipo.choices(), default=Tipo.COTISTA, max_length=15)
-    status = models.CharField(choices=Status.choices(), default=Status.ATIVO, max_length=15)
-    partilha = models.CharField(choices=Partilha.choices(), default=Partilha.ATIBAIA, max_length=15)
-    higieniza = models.BooleanField(default=False)
-    dt_ini = models.DateField(default=date.today)
-    dt_validade = models.DateField # TODO default = today + 1 ano
+    tipo = models.CharField('Tipo', choices=Tipo.choices(), default=Tipo.COTISTA, max_length=15)
+    status = models.CharField('Status', choices=Status.choices(), default=Status.ATIVO, max_length=15)
+    partilha = models.CharField('Partilha', choices=Partilha.choices(), default=Partilha.ATIBAIA, max_length=15)
+    higieniza = models.BooleanField('Higieniza', default=False)
+    dt_ini = models.DateField('Início', default=date.today)
+    dt_validade = models.DateField('Validade', default=get_validade_default)  # TODO default = today + 1 ano
     # dt_ini_desliga = models.DateField TODO resultante
     # dt_ini_susp = models.DateField TODO resultante
     # dt_fim = models.DateField TODO resultante

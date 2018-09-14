@@ -49,7 +49,10 @@ class Pessoa(models.Model):
     profissao = models.CharField('Profissão', max_length=300, null=True, blank=True)
     telefone = models.BigIntegerField('Telefone', null=True, blank=True)
     email = models.EmailField('E-mail', null=True, blank=True)
-    user = models.ForeignKey('Usuário', User, blank=True, null=True, unique=True)
+    user = models.OneToOneField(User,
+                                related_name='pessoa',
+                                blank=True, null=True,
+                                on_delete=models.PROTECT)
 
     def __str__(self):
         if self.apelido != '':

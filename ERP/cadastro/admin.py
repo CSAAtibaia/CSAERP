@@ -20,12 +20,12 @@ class PessoaAdmin(admin.ModelAdmin):
 
 
 class ComCotaInLine(admin.TabularInline):
-    fields = ['comentario'] # TODO , 'arquivo'
+    fields = ['comentario']     # TODO , 'arquivo'
     model = ComCota
     extra = 0
 
 
-class CotaAdmin(admin.ModelAdmin):
+class CotaAdmin(admin.ModelAdmin):  # TODO adicionar tipo, status e partilha na listview
     inlines = [ComCotaInLine]
 
 

@@ -34,12 +34,12 @@ class Pessoa(models.Model):
     prim_nome = models.CharField('Nome', max_length=50)  # TODO controlar duplicidade
     sobrenome = models.CharField('Sobrenome', max_length=100)
     dt_nascimento = models.DateField('Data de Nascimento')
-    apelido = models.CharField('Apelido', max_length=50, unique=True, null=True)
-    rg = models.PositiveIntegerField('RG', null=True)  # TODO RG formato validar dígito
-    cpf = models.BigIntegerField('CPF', null=True)     # TODO CPF formato validar dígito
-    profissao = models.CharField('Profissão', max_length=300, null=True)
-    telefone = models.BigIntegerField('Telefone', null=True)
-    email = models.EmailField('E-mail', null=True)
+    apelido = models.CharField('Apelido', max_length=50, unique=True, null=True, blank=True)
+    rg = models.PositiveIntegerField('RG', null=True, blank=True)  # TODO RG formato validar dígito
+    cpf = models.BigIntegerField('CPF', null=True, blank=True)     # TODO CPF formato validar dígito
+    profissao = models.CharField('Profissão', max_length=300, null=True, blank=True)
+    telefone = models.BigIntegerField('Telefone', null=True, blank=True)
+    email = models.EmailField('E-mail', null=True, blank=True)
 
     def __str__(self):
         if self.apelido == '':
@@ -88,8 +88,11 @@ class Cota(models.Model):
     def __str__(self):
         if Cota.objects.filter(principal=self.principal).count() == 1:
             return str(self.principal)
-        else:   # TODO mudar para a desc de tipo e status
-            return "%s - %s - %s" % (self.principal, self.tipo, self.status)
+        else:
+            return "%s - %s - %s" % (self.principal,
+                                     self.get_tipo_display(),
+                                     self.get_status_display()
+                                     )
 
 
 class ComCota(models.Model):

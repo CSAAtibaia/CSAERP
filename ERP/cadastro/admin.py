@@ -4,13 +4,19 @@ from .models import Pessoa, Cota, ComCota, ComPessoa
 
 
 class ComPessoaInLine(admin.TabularInline):
-    fields = ['comentario'] # TODO , 'arquivo'
+    fields = ['comentario']     # TODO , 'arquivo'
     model = ComPessoa
     extra = 0
 
 
+class CotaInLine(admin.TabularInline):
+    fields = ['tipo', 'status', 'partilha', 'dt_ini', 'dt_validade']
+    model = Cota
+    extra = 0
+
+
 class PessoaAdmin(admin.ModelAdmin):
-    inlines = [ComPessoaInLine]
+    inlines = [CotaInLine, ComPessoaInLine]
 
 
 class ComCotaInLine(admin.TabularInline):

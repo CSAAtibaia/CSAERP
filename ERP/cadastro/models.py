@@ -30,6 +30,15 @@ class Partilha(ChoiceEnum):
     SAOPAULO = 'São Paulo'
 
 
+class Frenquencia(ChoiceEnum):
+    SEMANAL = 'Semanal'
+    MENSAL = 'Mensal'
+    BIMESTRAL = 'Bimestral'
+    TRIMESTRAL = 'Trimestral'
+    SEMESTRAL = 'Semestral'
+    ANUAL = 'Anual'
+
+
 class Pessoa(models.Model):
     prim_nome = models.CharField('Nome', max_length=50)  # TODO controlar duplicidade
     sobrenome = models.CharField('Sobrenome', max_length=100)
@@ -65,13 +74,31 @@ class ComPessoa(models.Model):
         ordering = ('dt_com',)
 
 
+class Servico(models.Model):
+    servico = models.CharField('Serviço', max_length=100, unique=True)
+    descricao = models.CharField('Descrição', max_length=255, null=True)
+    valor = models.DecimalField('Valor', max_digits=6, decimal_places=2)
+    frequencia = models.CharField('Frequência',
+                                  max_length=15,
+                                  choices=Frenquencia.choices(),
+                                  default=Frenquencia.SEMANAL)
+    valor_adesao = models.DecimalField('Valor Adesão', max_digits=6, decimal_places=2, blank=True, null=True)
+    max_adesao = models.PositiveIntegerField('Max', null=True)
+    email = models.EmailField('E-Mail', null=True)
+    referencia = models.CharField('Referência', max_length=100, unique=True)
+    duracao_padrao = models.PositiveSmallIntegerField('Duração', blank=True, null=True)
+
+    def __str__(self):
+        return self.servico
+
+
 class Cota(models.Model):
     tipo = models.CharField('Tipo', choices=Tipo.choices(), default=Tipo.COTISTA, max_length=15)
     status = models.CharField('Status', choices=Status.choices(), default=Status.ATIVO, max_length=15)
     partilha = models.CharField('Partilha', choices=Partilha.choices(), default=Partilha.ATIBAIA, max_length=15)
     higieniza = models.BooleanField('Higieniza', default=False)
     dt_ini = models.DateField('Início', default=date.today)
-    dt_validade = models.DateField('Validade', default=get_validade_default)  # TODO default = today + 1 ano
+    dt_validade = models.DateField('Validade', default=get_validade_default)  # TODO default = today + X
     # dt_ini_desliga = models.DateField TODO resultante
     # dt_ini_susp = models.DateField TODO resultante
     # dt_fim = models.DateField TODO resultante
@@ -109,4 +136,18 @@ class ComCota(models.Model):
         return self.comentario
 
     class Meta:
-        ordering = ('dt_com',)
+        ordering = ('-dt_com',)
+
+
+class Assinatura(models.Model):
+    cota = models.ForeignKey('Cota', Cota,
+                             related_name='assinatura',
+                             null=False,
+                             on_delete=models.PROTECT)
+    servico = models.ForeignKey('Serviço', Servico,
+                                related_name='assinatura',
+                                null=False,
+                                on_delete=models.PROTECT)
+    dt_ini = models.DateField('Início', default=date.today)
+    dt_validade = models.DateField('Validade', default=get_validade_default)  # TODO default = today + X
+    obs = models.TextField('Observações')

@@ -49,12 +49,18 @@ class Pessoa(models.Model):
     profissao = models.CharField('Profissão', max_length=300, null=True, blank=True)
     telefone = models.BigIntegerField('Telefone', null=True, blank=True)
     email = models.EmailField('E-mail', null=True, blank=True)
+    user = models.OneToOneField(User,
+                                related_name='pessoa',
+                                blank=True, null=True,
+                                on_delete=models.PROTECT)
 
     def __str__(self):
-        if self.apelido == '':
-            return "%s %s - %s" % (self.prim_nome, self.sobrenome, self.pk)
-        else:
+        if self.apelido != '':
             return self.apelido
+        elif self.user != '':
+            return self.user
+        else:
+            return "%s %s - %s" % (self.prim_nome, self.sobrenome, self.pk)
 
 
 class ComPessoa(models.Model):

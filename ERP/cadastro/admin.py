@@ -1,6 +1,6 @@
 # Register your models here.
 from django.contrib import admin
-from .models import Pessoa, Cota, ComCota, ComPessoa
+from .models import *
 
 
 class ComPessoaInLine(admin.TabularInline):
@@ -25,9 +25,15 @@ class ComCotaInLine(admin.TabularInline):
     extra = 0
 
 
+class AssinaturaInline(admin.TabularInline):
+    model = Assinatura
+    extra = 0
+
+
 class CotaAdmin(admin.ModelAdmin):  # TODO adicionar tipo, status e partilha na listview
-    inlines = [ComCotaInLine]
+    inlines = [ComCotaInLine, AssinaturaInline]
 
 
 admin.site.register(Pessoa, PessoaAdmin)
 admin.site.register(Cota, CotaAdmin)
+admin.site.register(Servico)

@@ -76,16 +76,16 @@ class ComPessoa(models.Model):
 
 class Servico(models.Model):
     servico = models.CharField('Serviço', max_length=100, unique=True)
-    descricao = models.CharField('Descrição', max_length=255, null=True)
+    descricao = models.CharField('Descrição', max_length=255, null=True, blank=True)
     valor = models.DecimalField('Valor', max_digits=6, decimal_places=2)
     frequencia = models.CharField('Frequência',
                                   max_length=15,
                                   choices=Frenquencia.choices(),
-                                  default=Frenquencia.SEMANAL)
+                                  default=Frenquencia.MENSAL)
     valor_adesao = models.DecimalField('Valor Adesão', max_digits=6, decimal_places=2, blank=True, null=True)
-    max_adesao = models.PositiveIntegerField('Max', null=True)
-    email = models.EmailField('E-Mail', null=True)
-    referencia = models.CharField('Referência', max_length=100, unique=True)
+    max_adesao = models.PositiveIntegerField('Max', blank=True, null=True)
+    email = models.EmailField('E-Mail', null=True, blank=True)
+    referencia = models.CharField('Referência', max_length=100, unique=True, blank=True, null=True)
     duracao_padrao = models.PositiveSmallIntegerField('Duração', blank=True, null=True)
 
     def __str__(self):
@@ -140,14 +140,14 @@ class ComCota(models.Model):
 
 
 class Assinatura(models.Model):
-    cota = models.ForeignKey('Cota', Cota,
+    cota = models.ForeignKey(Cota,
                              related_name='assinatura',
                              null=False,
                              on_delete=models.PROTECT)
-    servico = models.ForeignKey('Serviço', Servico,
+    servico = models.ForeignKey(Servico,    # TODO somente um serviço / tipo / cota ativo
                                 related_name='assinatura',
                                 null=False,
                                 on_delete=models.PROTECT)
     dt_ini = models.DateField('Início', default=date.today)
     dt_validade = models.DateField('Validade', default=get_validade_default)  # TODO default = today + X
-    obs = models.TextField('Observações')
+    obs = models.TextField('Observações', blank=True, null=True)

@@ -30,6 +30,8 @@
       <w>descrição</w>
       <w>desliga</w>
       <w>duplicidade</w>
+      <w>duracao</w>
+      <w>duração</w>
       <w>dígito</w>
       <w>escolhida</w>
       <w>formato</w>
@@ -55,6 +57,7 @@
       <w>obrigatória</w>
       <w>observações</w>
       <w>outros</w>
+      <w>padrao</w>
       <w>partilha</w>
       <w>permuta</w>
       <w>pessoa</w>
@@ -73,6 +76,7 @@
       <w>servico</w>
       <w>serviço</w>
       <w>sobrenome</w>
+      <w>somente</w>
       <w>susp</w>
       <w>suspenso</w>
       <w>telefone</w>

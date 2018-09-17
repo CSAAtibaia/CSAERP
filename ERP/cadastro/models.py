@@ -150,10 +150,14 @@ class Assinatura(models.Model):
                              related_name='assinatura',
                              null=False,
                              on_delete=models.PROTECT)
-    servico = models.ForeignKey(Servico,    # TODO somente um serviço / tipo / cota ativo
+    servico = models.ForeignKey(Servico,
+                                # limit_choices_to= ? # TODO somente um serviço / tipo / cota ativo
                                 related_name='assinatura',
                                 null=False,
                                 on_delete=models.PROTECT)
     dt_ini = models.DateField('Início', default=date.today)
     dt_validade = models.DateField('Validade', default=get_validade_default)  # TODO default = today + X
     obs = models.TextField('Observações', blank=True, null=True)
+
+    def __str__(self):
+        return str(self.pk)

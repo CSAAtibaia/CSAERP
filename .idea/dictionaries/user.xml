@@ -12,16 +12,20 @@
       <w>atibaia</w>
       <w>ativo</w>
       <w>atual</w>
+      <w>autor</w>
       <w>aviso</w>
+      <w>bairro</w>
       <w>bimestral</w>
       <w>bolsista</w>
       <w>cadastro</w>
+      <w>cidade</w>
       <w>comcota</w>
       <w>comcotauser</w>
       <w>comentario</w>
       <w>comentário</w>
       <w>compessoa</w>
       <w>compessoauser</w>
+      <w>complemento</w>
       <w>controlar</w>
       <w>cota</w>
       <w>cotas</w>
@@ -33,6 +37,7 @@
       <w>duracao</w>
       <w>duração</w>
       <w>dígito</w>
+      <w>endereco</w>
       <w>escolhida</w>
       <w>formato</w>
       <w>frenquencia</w>
@@ -47,11 +52,14 @@
       <w>início</w>
       <w>lista</w>
       <w>listview</w>
+      <w>logradouro</w>
       <w>mensal</w>
       <w>mudar</w>
       <w>nascimento</w>
       <w>nota</w>
       <w>notas</w>
+      <w>numero</w>
+      <w>número</w>
       <w>obrigar</w>
       <w>obrigatoriedades</w>
       <w>obrigatória</w>
@@ -61,12 +69,14 @@
       <w>partilha</w>
       <w>permuta</w>
       <w>pessoa</w>
+      <w>preencher</w>
       <w>profissao</w>
       <w>profissão</w>
       <w>prévio</w>
       <w>refazer</w>
       <w>referencia</w>
       <w>referência</w>
+      <w>resto</w>
       <w>restringir</w>
       <w>resultante</w>
       <w>retira</w>

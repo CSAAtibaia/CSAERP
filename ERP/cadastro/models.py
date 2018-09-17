@@ -25,11 +25,6 @@ class Status(ChoiceEnum):
     SUSPENSO = 'Suspenso'
 
 
-class Partilha(ChoiceEnum):
-    ATIBAIA = 'Atibaia'
-    SAOPAULO = 'São Paulo'
-
-
 class Frenquencia(ChoiceEnum):
     SEMANAL = 'Semanal'
     MENSAL = 'Mensal'
@@ -37,6 +32,26 @@ class Frenquencia(ChoiceEnum):
     TRIMESTRAL = 'Trimestral'
     SEMESTRAL = 'Semestral'
     ANUAL = 'Anual'
+
+
+class Endereco(models.Model):
+    tp_logradouro = models.CharField('Tipo', max_length=25, default='Rua')
+    logradouro = models.CharField('Logradouro', max_length=255, default='Rua')
+    numero = models.PositiveIntegerField('Número')
+    complemento = models.CharField('Complemento', max_length=255, null=True, blank=True)
+    bairro = models.CharField('Bairro', max_length=255)
+    cidade = models.CharField('Cidade', max_length=255)
+    uf = models.CharField('UF', max_length=2)
+    cep = models.PositiveIntegerField('CEP')   # TODO display {{ value|stringformat:"04d" }}
+    # TODO CEP preencher o resto
+
+
+class Partilha(models.Model):
+    nome = models.CharField('Nome', max_length=25, unique=True)
+    endereco = models.OneToOneField(Endereco,
+                                    related_name='partilha',
+                                    blank=True, null=True,
+                                    on_delete=models.PROTECT)
 
 
 class Pessoa(models.Model):
@@ -53,6 +68,10 @@ class Pessoa(models.Model):
                                 related_name='pessoa',
                                 blank=True, null=True,
                                 on_delete=models.PROTECT)
+    endereco = models.OneToOneField(Endereco,
+                                    related_name='pessoa',
+                                    blank=True, null=True,
+                                    on_delete=models.PROTECT)
 
     def __str__(self):
         if self.apelido != '':
@@ -66,10 +85,10 @@ class Pessoa(models.Model):
 class ComPessoa(models.Model):
     comentario = models.TextField(default='Insira seu comentário')  # TODO impedir edit
     # TODO arquivo = models.FileField
-    user = models.ForeignKey(User,  # TODO obrigar a ser o usuário atual
-                             related_name='compessoauser',
-                             on_delete=models.PROTECT,
-                             default=0)
+    autor = models.ForeignKey(User,  # TODO obrigar a ser o usuário atual
+                              related_name='compessoauser',
+                              on_delete=models.PROTECT,
+                              default=0)
     dt_com = models.DateTimeField(auto_now_add=True)
     fk_pessoa = models.ForeignKey(Pessoa, on_delete=models.CASCADE, related_name='compessoa')
 
@@ -101,7 +120,10 @@ class Servico(models.Model):
 class Cota(models.Model):
     tipo = models.CharField('Tipo', choices=Tipo.choices(), default=Tipo.COTISTA, max_length=15)
     status = models.CharField('Status', choices=Status.choices(), default=Status.ATIVO, max_length=15)
-    partilha = models.CharField('Partilha', choices=Partilha.choices(), default=Partilha.ATIBAIA, max_length=15)
+    partilha = models.ForeignKey(Partilha,
+                                 related_name='cota',
+                                 null=False,
+                                 on_delete=models.PROTECT)
     higieniza = models.BooleanField('Higieniza', default=False)
     dt_ini = models.DateField('Início', default=date.today)
     dt_validade = models.DateField('Validade', default=get_validade_default)  # TODO default = today + X
@@ -131,10 +153,10 @@ class Cota(models.Model):
 class ComCota(models.Model):
     comentario = models.TextField(default='Insira seu comentário')  # TODO impedir edit
     # TODO arquivo = models.FileField
-    user = models.ForeignKey(User,  # TODO obrigar a ser o usuário atual
-                             related_name='comcotauser',
-                             on_delete=models.PROTECT,
-                             default=0)
+    autor = models.ForeignKey(User,  # TODO obrigar a ser o usuário atual
+                              related_name='comcotauser',
+                              on_delete=models.PROTECT,
+                              default=0)
     dt_com = models.DateTimeField(auto_now_add=True)
     fk_cota = models.ForeignKey(Cota, related_name='comcota', on_delete=models.CASCADE)
 

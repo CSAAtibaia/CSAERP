@@ -4,7 +4,7 @@ from .models import *
 
 
 class ComPessoaInLine(admin.TabularInline):
-    fields = ['comentario']     # TODO , 'arquivo'
+    fields = ['comentario']     # TODO , 'arquivo', 'user'
     model = ComPessoa
     extra = 0
 
@@ -20,7 +20,7 @@ class PessoaAdmin(admin.ModelAdmin):
 
 
 class ComCotaInLine(admin.TabularInline):
-    fields = ['comentario']     # TODO , 'arquivo'
+    fields = ['comentario']     # TODO , 'arquivo', 'user'
     model = ComCota
     extra = 0
 

@@ -18,6 +18,7 @@ from django.urls import include, path
 
 urlpatterns = [
     path('cadastro/', include('cadastro.urls')),
+    path('saidas/', include('saidas.urls')),
     path('admin/', admin.site.urls),
     # path('cep/', include('cep.urls')),
 ]

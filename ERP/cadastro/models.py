@@ -34,6 +34,37 @@ class Frenquencia(ChoiceEnum):
     ANUAL = 'Anual'
 
 
+class Partilha(models.Model):
+    nome = models.CharField('Nome', max_length=25, unique=True)
+
+    def __str__(self):
+        return self.nome
+
+
+class Pessoa(models.Model):
+    prim_nome = models.CharField('Nome', max_length=50)  # TODO controlar duplicidade
+    sobrenome = models.CharField('Sobrenome', max_length=100)
+    dt_nascimento = models.DateField('Data de Nascimento')
+    apelido = models.CharField('Apelido', max_length=50, unique=True, null=True, blank=True)
+    rg = models.PositiveIntegerField('RG', null=True, blank=True, unique=True)  # TODO RG formato validar dígito
+    cpf = models.BigIntegerField('CPF', null=True, blank=True, unique=True)     # TODO CPF formato validar dígito
+    profissao = models.CharField('Profissão', max_length=300, null=True, blank=True)
+    telefone = models.BigIntegerField('Telefone', null=True, blank=True)
+    email = models.EmailField('E-mail', null=True, blank=True, unique=True)
+    user = models.OneToOneField(User,
+                                related_name='pessoa',
+                                blank=True, null=True,
+                                on_delete=models.PROTECT)
+
+    def __str__(self):
+        if self.apelido != '':
+            return self.apelido
+        elif self.user != '':
+            return self.user
+        else:
+            return "%s %s - %s" % (self.prim_nome, self.sobrenome, self.pk)
+
+
 class Endereco(models.Model):
     tp_logradouro = models.CharField('Tipo', max_length=25, default='Rua')
     logradouro = models.CharField('Logradouro', max_length=255, default='Rua')
@@ -44,42 +75,17 @@ class Endereco(models.Model):
     uf = models.CharField('UF', max_length=2)
     cep = models.PositiveIntegerField('CEP')   # TODO display {{ value|stringformat:"04d" }}
     # TODO CEP preencher o resto
-
-
-class Partilha(models.Model):
-    nome = models.CharField('Nome', max_length=25, unique=True)
-    endereco = models.OneToOneField(Endereco,
-                                    related_name='partilha',
-                                    blank=True, null=True,
-                                    on_delete=models.PROTECT)
-
-
-class Pessoa(models.Model):
-    prim_nome = models.CharField('Nome', max_length=50)  # TODO controlar duplicidade
-    sobrenome = models.CharField('Sobrenome', max_length=100)
-    dt_nascimento = models.DateField('Data de Nascimento')
-    apelido = models.CharField('Apelido', max_length=50, unique=True, null=True, blank=True)
-    rg = models.PositiveIntegerField('RG', null=True, blank=True)  # TODO RG formato validar dígito
-    cpf = models.BigIntegerField('CPF', null=True, blank=True)     # TODO CPF formato validar dígito
-    profissao = models.CharField('Profissão', max_length=300, null=True, blank=True)
-    telefone = models.BigIntegerField('Telefone', null=True, blank=True)
-    email = models.EmailField('E-mail', null=True, blank=True)
-    user = models.OneToOneField(User,
-                                related_name='pessoa',
-                                blank=True, null=True,
-                                on_delete=models.PROTECT)
-    endereco = models.OneToOneField(Endereco,
-                                    related_name='pessoa',
+    pessoa = models.OneToOneField(Pessoa,
+                                  related_name='endereco',
+                                  blank=True, null=True,
+                                  on_delete=models.PROTECT)
+    endereco = models.OneToOneField(Partilha,
+                                    related_name='endereco',
                                     blank=True, null=True,
                                     on_delete=models.PROTECT)
 
     def __str__(self):
-        if self.apelido != '':
-            return self.apelido
-        elif self.user != '':
-            return self.user
-        else:
-            return "%s %s - %s" % (self.prim_nome, self.sobrenome, self.pk)
+        return self.pk
 
 
 class ComPessoa(models.Model):
@@ -132,13 +138,14 @@ class Cota(models.Model):
     # dt_fim = models.DateField TODO resultante
     # dt_retira = models.DateField TODO resultante
     principal = models.ForeignKey(Pessoa,   # TODO validar/restringir q Pessoa escolhida tem rg/cpf
+                                  # limit_choices_to=Pessoa.objects.filter(rg != 0),
                                   related_name='cota',
                                   null=False,
                                   on_delete=models.PROTECT)
     outros = models.ManyToManyField(Pessoa,
                                     related_name='cota_outros',
                                     blank=True
-                                    )     # TODO remover pessoa principal da lista
+                                    )
 
     def __str__(self):
         if Cota.objects.filter(principal=self.principal).count() == 1:
@@ -151,9 +158,9 @@ class Cota(models.Model):
 
 
 class ComCota(models.Model):
-    comentario = models.TextField(default='Insira seu comentário')  # TODO impedir edit
+    comentario = models.TextField(default='Insira seu comentário')
     # TODO arquivo = models.FileField
-    autor = models.ForeignKey(User,  # TODO obrigar a ser o usuário atual
+    autor = models.ForeignKey(User,
                               related_name='comcotauser',
                               on_delete=models.PROTECT,
                               default=0)
@@ -173,7 +180,6 @@ class Assinatura(models.Model):
                              null=False,
                              on_delete=models.PROTECT)
     servico = models.ForeignKey(Servico,
-                                # limit_choices_to= ? # TODO somente um serviço / tipo / cota ativo
                                 related_name='assinatura',
                                 null=False,
                                 on_delete=models.PROTECT)

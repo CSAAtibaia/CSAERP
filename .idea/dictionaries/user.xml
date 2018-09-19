@@ -18,18 +18,25 @@
       <w>bimestral</w>
       <w>bolsista</w>
       <w>cadastro</w>
+      <w>centro</w>
       <w>cidade</w>
+      <w>cnpj</w>
+      <w>codigo</w>
       <w>comcota</w>
       <w>comcotauser</w>
       <w>comentario</w>
       <w>comentário</w>
+      <w>comentários</w>
       <w>compessoa</w>
       <w>compessoauser</w>
       <w>complemento</w>
+      <w>contato</w>
       <w>controlar</w>
       <w>cota</w>
       <w>cotas</w>
       <w>cotista</w>
+      <w>custo</w>
+      <w>código</w>
       <w>descricao</w>
       <w>descrição</w>
       <w>desliga</w>
@@ -40,6 +47,7 @@
       <w>endereco</w>
       <w>escolhida</w>
       <w>formato</w>
+      <w>fornecedor</w>
       <w>frenquencia</w>
       <w>frequencia</w>
       <w>frequência</w>
@@ -80,6 +88,8 @@
       <w>restringir</w>
       <w>resultante</w>
       <w>retira</w>
+      <w>saida</w>
+      <w>saidas</w>
       <w>saopaulo</w>
       <w>semanal</w>
       <w>semestral</w>

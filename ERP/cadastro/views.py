@@ -6,6 +6,11 @@ from django.http import HttpResponse
 from .models import Cota
 
 
+# TODO assinatura: somente um serviço / tipo / cota ativo
+# TODO comentários: obrigar a ser o usuário atual
+# TODO comentários: impedir edit
+# TODO Cota: remover pessoa principal da lista outros
+
 def index(request):
     status = ['A', 'P']
     output = Cota.objects.filter(status__in=status) \

@@ -32,7 +32,8 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'cadastro.apps.CadastroConfig',
-    'cep',
+    'saidas.apps.SaidasConfig',
+    # 'cep',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

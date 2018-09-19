@@ -1,6 +1,6 @@
 from django.db import models
 from datetime import date
-from cadastro.models import Cota, Pessoa # TODO Pycharm n gosta mas funciona. W T F ?
+from cadastro.models import *    # TODO Pycharm n gosta mas funciona. W T F ?
 # from ERP.cadastro.models import Cota, Pessoa # TODO migrations são feitas sem ERP. wtf?
 # Create your models here.
 

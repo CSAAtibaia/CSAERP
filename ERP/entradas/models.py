@@ -1,7 +1,7 @@
 from django.db import models
 from datetime import date
 from cadastro.models import *    # TODO Pycharm n gosta mas funciona. W T F ?
-#from ERP.cadastro.models import * # TODO migrations são feitas sem ERP. wtf?
+# from ERP.cadastro.models import * # TODO migrations são feitas sem ERP. wtf?
 
 
 # Pagamento < Assinatura < Cota

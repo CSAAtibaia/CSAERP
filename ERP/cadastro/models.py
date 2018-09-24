@@ -1,13 +1,18 @@
 from django.db import models
-from datetime import date   # TODO , timedelta
+from datetime import date, datetime, timedelta
 from django.contrib.auth.models import User
 from .utils import ChoiceEnum
 
 # Create your models here.
 
+ANO = 365
+MES = 30
+SEMESTRE = 180
 
-def get_validade_default():
-    return date.today   # TODO + timedelta(days=365)
+
+def get_validade_default(x):
+    date_x = datetime.now() + timedelta(days=x)
+    return date_x
 
 
 class Tipo(ChoiceEnum):
@@ -36,6 +41,7 @@ class Frenquencia(ChoiceEnum):
 
 class Partilha(models.Model):
     nome = models.CharField('Nome', max_length=25, unique=True)
+    padrao = models.BooleanField  # TODO só pode haver 1
 
     def __str__(self):
         return self.nome
@@ -132,7 +138,7 @@ class Cota(models.Model):
                                  on_delete=models.PROTECT)
     higieniza = models.BooleanField('Higieniza', default=False)
     dt_ini = models.DateField('Início', default=date.today)
-    dt_validade = models.DateField('Validade', default=get_validade_default)  # TODO default = today + X
+    dt_validade = models.DateField('Validade', default=get_validade_default(ANO))
     # dt_ini_desliga = models.DateField TODO resultante
     # dt_ini_susp = models.DateField TODO resultante
     # dt_fim = models.DateField TODO resultante
@@ -184,7 +190,7 @@ class Assinatura(models.Model):
                                 null=False,
                                 on_delete=models.PROTECT)
     dt_ini = models.DateField('Início', default=date.today)
-    dt_validade = models.DateField('Validade', default=get_validade_default)  # TODO default = today + X
+    dt_validade = models.DateField('Validade', default=get_validade_default(ANO))
     obs = models.TextField('Observações', blank=True, null=True)
     # TODO auth token para verificação & validação
     # TODO método cobrança

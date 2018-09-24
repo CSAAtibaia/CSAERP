@@ -186,6 +186,8 @@ class Assinatura(models.Model):
     dt_ini = models.DateField('Início', default=date.today)
     dt_validade = models.DateField('Validade', default=get_validade_default)  # TODO default = today + X
     obs = models.TextField('Observações', blank=True, null=True)
+    # TODO auth token para verificação & validação
+    # TODO método cobrança
 
     def __str__(self):
-        return str(self.pk)
+        return "%s - %s" % (str(self.cota), str(self.pk))

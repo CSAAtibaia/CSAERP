@@ -1,3 +1,5 @@
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 from enum import Enum
 import re
 from typing import Iterator
@@ -108,3 +110,11 @@ def validar_cnpj(cnpj):
     if novo == inteiros:
         return cnpj
     return False
+
+
+def validador_cpf(cpf):
+    if validar_cpf(cpf) != cpf:
+        raise ValidationError(
+            _('%(cpf)s não é um CPF válido'),
+            params={'cpf': cpf}
+        )

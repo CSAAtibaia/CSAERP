@@ -6,6 +6,7 @@
       <w>adicionar</w>
       <w>anual</w>
       <w>apelido</w>
+      <w>apenas</w>
       <w>apoiador</w>
       <w>arquivo</w>
       <w>assinatura</w>
@@ -32,6 +33,7 @@
       <w>complemento</w>
       <w>contato</w>
       <w>controlar</w>
+      <w>corretos</w>
       <w>cota</w>
       <w>cotas</w>
       <w>cotista</w>
@@ -46,6 +48,7 @@
       <w>dígito</w>
       <w>endereco</w>
       <w>entradas</w>
+      <w>errados</w>
       <w>escolhida</w>
       <w>formato</w>
       <w>fornecedor</w>
@@ -58,6 +61,7 @@
       <w>inativo</w>
       <w>inserir</w>
       <w>insira</w>
+      <w>inteiros</w>
       <w>início</w>
       <w>lista</w>
       <w>listview</w>
@@ -67,14 +71,17 @@
       <w>nascimento</w>
       <w>nota</w>
       <w>notas</w>
+      <w>novo</w>
       <w>numero</w>
       <w>número</w>
+      <w>números</w>
       <w>obrigar</w>
       <w>obrigatoriedades</w>
       <w>obrigatória</w>
       <w>observações</w>
       <w>outros</w>
       <w>padrao</w>
+      <w>pagamento</w>
       <w>pagamentos</w>
       <w>partilha</w>
       <w>permuta</w>
@@ -91,11 +98,13 @@
       <w>restringir</w>
       <w>resultante</w>
       <w>retira</w>
+      <w>retornando</w>
       <w>saida</w>
       <w>saidas</w>
       <w>saopaulo</w>
       <w>semanal</w>
       <w>semestral</w>
+      <w>semestre</w>
       <w>servico</w>
       <w>serviço</w>
       <w>sobrenome</w>
@@ -103,12 +112,17 @@
       <w>susp</w>
       <w>suspenso</w>
       <w>telefone</w>
+      <w>teste</w>
       <w>tipo</w>
       <w>trabalhador</w>
       <w>trimestral</w>
       <w>usuário</w>
       <w>validade</w>
+      <w>validador</w>
       <w>validar</w>
+      <w>válida</w>
+      <w>válido</w>
+      <w>válidos</w>
     </words>
   </dictionary>
 </component>

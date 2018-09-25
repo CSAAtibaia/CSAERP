@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import date
+from cadastro.utils import validador_cnpj
 from cadastro.models import *    # TODO Pycharm n gosta mas funciona. W T F ?
 # from ERP.cadastro.models import Cota, Pessoa # TODO migrations são feitas sem ERP. wtf?
 # Create your models here.
@@ -15,7 +16,9 @@ class CentroDeCusto(models.Model):
 
 class Fornecedor(models.Model):
     nome = models.CharField('Nome', max_length=50, unique=True)
-    cnpj = models.BigIntegerField('CNPJ', null=True, blank=True, unique=True)
+    cnpj = models.BigIntegerField('CNPJ',
+                                  validators=[validador_cnpj],
+                                  null=True, blank=True, unique=True)
     contato = models.OneToOneField(Pessoa,
                                    verbose_name='contato',
                                    related_name='fornecedor',

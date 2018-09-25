@@ -1,7 +1,7 @@
 from django.db import models
 from datetime import date
 from cadastro.models import *    # TODO Pycharm n gosta mas funciona. W T F ?
-# from ERP.cadastro.models import * # TODO migrations são feitas sem ERP. wtf?
+# from ERP.cadastro.models import *   # TODO migrations são feitas sem ERP. wtf?
 
 
 # Pagamento < Assinatura < Cota
@@ -16,7 +16,9 @@ class Pagamento(models.Model):
     # TODO metodo retorne cota
     dt_ref = models.DateField('Referência')
     dt_real = models.DateField('Realizado')
-    arquivo = models.CharField('Arquivo', max_length=100, blank=True, null=True)
-    # TODO ARRAY vl , servico
+    arquivo = models.CharField('Arquivo', max_length=100, blank=True, null=True)  # TODO file
     obs = models.CharField('Observações', max_length=100, blank=True, null=True)
     # TODO método vl total
+
+    def __str__(self):
+        return "%s - %s" % (self.assinatura, self.dt_ref)

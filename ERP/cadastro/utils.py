@@ -45,15 +45,13 @@ def validar_rg(rg):
 
     inteiros = [int(digit) for digit in rg if digit.isdigit()]
     novo = inteiros[:8]
+    r = sum([(9-i)*v for i, v in enumerate(novo)]) % 11  # type: int
 
-    while len(novo) < 9:
-        r = sum([(len(novo)+1-i)*v for i, v in enumerate(novo)]) % 11  # type: int
-
-        if r > 1:
-            f = 11 - r
-        else:
-            f = 0
-        novo.append(f)
+    if r != 10:
+        f = r
+    else:
+        f = 0
+    novo.append(f)
 
     # Se o número gerado coincidir com o número original, é válido
     if novo == inteiros:
@@ -177,7 +175,7 @@ def validador_rg(rg):
     teste = validar_rg(rg)
     if teste != rg:
         raise ValidationError(
-            _('%(rg)s não é um RG válido'),
+            _('%(rg)s não é um RG válido. Utilize 0 para dígito X'),
             params={'rg': rg}
         )
 

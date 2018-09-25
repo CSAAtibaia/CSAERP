@@ -1,7 +1,7 @@
 from django.db import models
 from datetime import date, datetime, timedelta
 from django.contrib.auth.models import User
-from .utils import ChoiceEnum, validador_cpf
+from .utils import ChoiceEnum, validador_cpf, validador_rg
 
 # Create your models here.
 
@@ -53,7 +53,7 @@ class Pessoa(models.Model):
     dt_nascimento = models.DateField('Data de Nascimento')
     apelido = models.CharField('Apelido', max_length=50, unique=True, null=True, blank=True)
     rg = models.PositiveIntegerField('RG',
-                                     #  validators=[validador_rg],
+                                     validators=[validador_rg],
                                      null=True,
                                      blank=True,
                                      unique=True)  # TODO RG formato validar dígito

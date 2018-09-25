@@ -95,7 +95,7 @@ def validar_cnpj(cnpj):
         return False
 
     # Pega apenas os 12 primeiros dígitos do CNPJ e gera os 2 dígitos que faltam
-    inteiros = map(int, cnpj)
+    inteiros = [int(digit) for digit in cnpj if digit.isdigit()]
     novo = inteiros[:12]  # type: Iterator[int]
 
     prod = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]

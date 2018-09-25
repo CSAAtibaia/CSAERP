@@ -48,7 +48,7 @@ class Partilha(models.Model):
 
 
 class Pessoa(models.Model):
-    prim_nome = models.CharField('Nome', max_length=50)  # TODO controlar duplicidade
+    prim_nome = models.CharField('Nome', max_length=50)
     sobrenome = models.CharField('Sobrenome', max_length=100)
     dt_nascimento = models.DateField('Data de Nascimento')
     apelido = models.CharField('Apelido', max_length=50, unique=True, null=True, blank=True)
@@ -59,7 +59,7 @@ class Pessoa(models.Model):
                                      unique=True)  # TODO RG formato validar dígito
     cpf = models.BigIntegerField('CPF',
                                  validators=[validador_cpf],
-                                 null=True, blank=True, unique=True)     # TODO CPF formato validar dígito
+                                 null=True, blank=True, unique=True)
     profissao = models.CharField('Profissão', max_length=300, null=True, blank=True)
     telefone = models.BigIntegerField('Telefone', null=True, blank=True)
     email = models.EmailField('E-mail', null=True, blank=True, unique=True)
@@ -150,7 +150,7 @@ class Cota(models.Model):
     # dt_fim = models.DateField TODO resultante
     # dt_retira = models.DateField TODO resultante
     principal = models.ForeignKey(Pessoa,   # TODO validar/restringir q Pessoa escolhida tem rg/cpf
-                                  # limit_choices_to=Pessoa.objects.filter(rg != 0),
+                                  # limit_choices_to=Pessoa.objects.filter(rg > 0 | cpf > 0),
                                   related_name='cota',
                                   null=False,
                                   on_delete=models.PROTECT)

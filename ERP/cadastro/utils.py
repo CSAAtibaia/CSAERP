@@ -2,13 +2,63 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from enum import Enum
 import re
-from typing import Iterator
+from typing import Iterator, List
 
 
 class ChoiceEnum(Enum):
     @classmethod
     def choices(cls):
         return tuple((x.name, x.value) for x in cls)
+
+
+# noinspection PyTypeChecker
+def validar_rg(rg):
+    """
+    Valida RGs, retornando apenas a string de números válida.
+
+    # RGs errados
+    >>> validar_rg('abcdefghi')
+    False
+    >>> validar_rg('123')
+    False
+    >>> validar_rg('')
+    False
+    >>> validar_rg(None)
+    False
+    >>> validar_rg('123456789')
+    False
+
+    # CPFs corretos
+    >>> validar_rg('293748767')
+    '293748767'
+    >>> validar_rg('29.374.876-7')
+    '293748767'
+    >>> validar_rg('  29 374 876 7  ')
+    '293748767'
+    """
+    rg = ''.join(re.findall('\d', str(rg)))
+
+    if (not rg) or (len(rg) < 9):
+        return False
+
+    # Pega apenas os 8 primeiros dígitos do RG e gera os 1 dígitos que faltam
+
+    inteiros = [int(digit) for digit in rg if digit.isdigit()]
+    novo = inteiros[:8]
+
+    while len(novo) < 9:
+        r = sum([(len(novo)+1-i)*v for i, v in enumerate(novo)]) % 11  # type: int
+
+        if r > 1:
+            f = 11 - r
+        else:
+            f = 0
+        novo.append(f)
+
+    # Se o número gerado coincidir com o número original, é válido
+    if novo == inteiros:
+        return int(rg)
+    return False
 
 
 # noinspection PyTypeChecker
@@ -95,7 +145,7 @@ def validar_cnpj(cnpj):
         return False
 
     # Pega apenas os 12 primeiros dígitos do CNPJ e gera os 2 dígitos que faltam
-    inteiros = [int(digit) for digit in cnpj if digit.isdigit()]
+    inteiros = [int(digit) for digit in cnpj if digit.isdigit()]  # type: List[int]
     novo = inteiros[:12]  # type: Iterator[int]
 
     prod = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
@@ -120,6 +170,15 @@ def validador_cpf(cpf):
         raise ValidationError(
             _('%(cpf)s não é um CPF válido'),
             params={'cpf': cpf}
+        )
+
+
+def validador_rg(rg):
+    teste = validar_rg(rg)
+    if teste != rg:
+        raise ValidationError(
+            _('%(rg)s não é um RG válido'),
+            params={'rg': rg}
         )
 
 

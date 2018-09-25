@@ -53,11 +53,13 @@ class Pessoa(models.Model):
     dt_nascimento = models.DateField('Data de Nascimento')
     apelido = models.CharField('Apelido', max_length=50, unique=True, null=True, blank=True)
     rg = models.PositiveIntegerField('RG',
-                                     validators=[validador_cpf],
+                                     #  validators=[validador_rg],
                                      null=True,
                                      blank=True,
                                      unique=True)  # TODO RG formato validar dígito
-    cpf = models.BigIntegerField('CPF', null=True, blank=True, unique=True)     # TODO CPF formato validar dígito
+    cpf = models.BigIntegerField('CPF',
+                                 validators=[validador_cpf],
+                                 null=True, blank=True, unique=True)     # TODO CPF formato validar dígito
     profissao = models.CharField('Profissão', max_length=300, null=True, blank=True)
     telefone = models.BigIntegerField('Telefone', null=True, blank=True)
     email = models.EmailField('E-mail', null=True, blank=True, unique=True)

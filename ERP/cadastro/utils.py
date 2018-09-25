@@ -42,7 +42,9 @@ def validar_cpf(cpf):
         return False
 
     # Pega apenas os 9 primeiros dígitos do CPF e gera os 2 dígitos que faltam
-    inteiros = map(int, cpf)
+
+    # inteiros = map(int, cpf) >> erro 'map' object is not subscriptable
+    inteiros = [int(digit) for digit in cpf if digit.isdigit()]
     novo = inteiros[:9]
 
     while len(novo) < 11:
@@ -56,7 +58,7 @@ def validar_cpf(cpf):
 
     # Se o número gerado coincidir com o número original, é válido
     if novo == inteiros:
-        return cpf
+        return int(cpf)
     return False
 
 
@@ -108,13 +110,22 @@ def validar_cnpj(cnpj):
 
     # Se o número gerado coincidir com o número original, é válido
     if novo == inteiros:
-        return cnpj
+        return int(cnpj)
     return False
 
 
 def validador_cpf(cpf):
-    if validar_cpf(cpf) != cpf:
+    teste = validar_cpf(cpf)
+    if teste != cpf:
         raise ValidationError(
             _('%(cpf)s não é um CPF válido'),
             params={'cpf': cpf}
+        )
+
+
+def validador_cnpj(cnpj):
+    if validar_cnpj(cnpj) != cnpj:
+        raise ValidationError(
+            _('%(cnpj)s não é um CNPJ válido'),
+            params={'cnpj': cnpj}
         )

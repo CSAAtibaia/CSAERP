@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 from datetime import date, datetime, timedelta
 from django.contrib.auth.models import User
 from .utils import ChoiceEnum, validador_cpf, validador_rg
@@ -41,10 +42,14 @@ class Frenquencia(ChoiceEnum):
 
 class Partilha(models.Model):
     nome = models.CharField('Nome', max_length=25, unique=True)
-    padrao = models.BooleanField  # TODO só pode haver 1
+    padrao = models.BooleanField
+    # TODO só pode haver 1
 
     def __str__(self):
         return self.nome
+
+    # def partilhapadrao():
+    #    return Partilha.objects.filter(padrao=True)
 
 
 class Pessoa(models.Model):
@@ -56,7 +61,7 @@ class Pessoa(models.Model):
                                      validators=[validador_rg],
                                      null=True,
                                      blank=True,
-                                     unique=True)  # TODO RG formato validar dígito
+                                     unique=True)
     cpf = models.BigIntegerField('CPF',
                                  validators=[validador_cpf],
                                  null=True, blank=True, unique=True)
@@ -139,12 +144,15 @@ class Cota(models.Model):
     tipo = models.CharField('Tipo', choices=Tipo.choices(), default=Tipo.COTISTA, max_length=15)
     status = models.CharField('Status', choices=Status.choices(), default=Status.ATIVO, max_length=15)
     partilha = models.ForeignKey(Partilha,
+                                 # default=Partilha.objects.filter(padrao=True),
                                  related_name='cota',
                                  null=False,
                                  on_delete=models.PROTECT)
     higieniza = models.BooleanField('Higieniza', default=False)
     dt_ini = models.DateField('Início', default=date.today)
-    dt_validade = models.DateField('Validade', default=get_validade_default(ANO))
+    dt_validade = models.DateField('Validade',
+                                   #    default=get_validade_default(ANO),
+                                   )
     # dt_ini_desliga = models.DateField TODO resultante
     # dt_ini_susp = models.DateField TODO resultante
     # dt_fim = models.DateField TODO resultante
@@ -196,7 +204,9 @@ class Assinatura(models.Model):
                                 null=False,
                                 on_delete=models.PROTECT)
     dt_ini = models.DateField('Início', default=date.today)
-    dt_validade = models.DateField('Validade', default=get_validade_default(ANO))
+    dt_validade = models.DateField('Validade',
+                                   #    default=get_validade_default(ANO),
+                                   )
     obs = models.TextField('Observações', blank=True, null=True)
     # TODO auth token para verificação & validação
     # TODO método cobrança

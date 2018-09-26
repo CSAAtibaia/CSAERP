@@ -20,6 +20,8 @@ class ComPessoaInLine(admin.TabularInline):
     fields = ['comentario']     # TODO , 'arquivo', 'user'
     model = ComPessoa
     extra = 0
+    # TODO obrigar a ser o usuário atual
+    # TODO impedir edit
 
 
 class CotaInLine(admin.TabularInline):
@@ -36,6 +38,8 @@ class ComCotaInLine(admin.TabularInline):
     fields = ['comentario']     # TODO , 'arquivo', 'user'
     model = ComCota
     extra = 0
+    # TODO obrigar a ser o usuário atual
+    # TODO impedir edit
 
 
 class AssinaturaInline(admin.TabularInline):
@@ -45,10 +49,13 @@ class AssinaturaInline(admin.TabularInline):
 
 class CotaAdmin(admin.ModelAdmin):  # TODO adicionar tipo, status e partilha na listview
     inlines = [ComCotaInLine, AssinaturaInline]
+    # default=Partilha.objects.filter(padrao=True),    # TODO colocar na view
 
 
 class PartilhaAdmin(admin.ModelAdmin):  # TODO adicionar tipo, status e partilha na listview
     inlines = [EnderecoInline]
+    fields = ['nome',
+              'padrao']
 
 
 admin.site.register(Pessoa, PessoaAdmin)

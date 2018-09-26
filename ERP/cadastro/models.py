@@ -1,5 +1,5 @@
 from django.db import models
-from django.core.exceptions import ValidationError
+from .fields import UniqueBooleanField
 from datetime import date, datetime, timedelta
 from django.contrib.auth.models import User
 from .utils import ChoiceEnum, validador_cpf, validador_rg
@@ -42,14 +42,14 @@ class Frenquencia(ChoiceEnum):
 
 class Partilha(models.Model):
     nome = models.CharField('Nome', max_length=25, unique=True)
-    padrao = models.BooleanField
-    # TODO só pode haver 1
+    padrao = UniqueBooleanField('Padrão', default=False, null=False)
 
     def __str__(self):
         return self.nome
 
-    # def partilhapadrao():
-    #    return Partilha.objects.filter(padrao=True)
+
+def partilhapadrao():
+    return Partilha.objects.filter(padrao=True)
 
 
 class Pessoa(models.Model):
@@ -96,19 +96,19 @@ class Endereco(models.Model):
                                   related_name='endereco',
                                   blank=True, null=True,
                                   on_delete=models.PROTECT)
-    endereco = models.OneToOneField(Partilha,
+    partilha = models.OneToOneField(Partilha,
                                     related_name='endereco',
                                     blank=True, null=True,
                                     on_delete=models.PROTECT)
 
     def __str__(self):
-        return self.pk
+        return str(self.pk)
 
 
 class ComPessoa(models.Model):
-    comentario = models.TextField(default='Insira seu comentário')  # TODO impedir edit
+    comentario = models.TextField(default='Insira seu comentário')
     # TODO arquivo = models.FileField
-    autor = models.ForeignKey(User,  # TODO obrigar a ser o usuário atual
+    autor = models.ForeignKey(User,
                               related_name='compessoauser',
                               on_delete=models.PROTECT,
                               default=0)
@@ -144,7 +144,6 @@ class Cota(models.Model):
     tipo = models.CharField('Tipo', choices=Tipo.choices(), default=Tipo.COTISTA, max_length=15)
     status = models.CharField('Status', choices=Status.choices(), default=Status.ATIVO, max_length=15)
     partilha = models.ForeignKey(Partilha,
-                                 # default=Partilha.objects.filter(padrao=True),
                                  related_name='cota',
                                  null=False,
                                  on_delete=models.PROTECT)

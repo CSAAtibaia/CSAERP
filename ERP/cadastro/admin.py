@@ -22,6 +22,7 @@ class ComPessoaInLine(admin.TabularInline):
     # TODO , 'arquivo', 'user'
     model = ComPessoa
     extra = 0
+    # TODO trazer do histórico user q criou comentário
 
     def has_change_permission(self, request, obj=None):
         return False
@@ -41,6 +42,7 @@ class ComCotaInLine(admin.TabularInline):
     # TODO , 'arquivo', 'user'
     model = ComCota
     extra = 0
+    # TODO trazer do histórico user q criou comentário
 
     def has_change_permission(self, request, obj=None):
         return False

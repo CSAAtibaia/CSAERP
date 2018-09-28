@@ -108,18 +108,10 @@ class Endereco(models.Model):
 class ComPessoa(models.Model):
     comentario = models.TextField(default='Insira seu comentário')
     # TODO arquivo = models.FileField
-    autor = models.ForeignKey(User,
-                              related_name='compessoauser',
-                              on_delete=models.PROTECT,
-                              default=0)
-    dt_com = models.DateTimeField(auto_now_add=True)
     fk_pessoa = models.ForeignKey(Pessoa, on_delete=models.CASCADE, related_name='compessoa')
 
     def __str__(self):
         return self.comentario
-
-    class Meta:
-        ordering = ('dt_com',)
 
 
 class Servico(models.Model):
@@ -179,19 +171,10 @@ class Cota(models.Model):
 class ComCota(models.Model):
     comentario = models.TextField(default='Insira seu comentário')
     # TODO arquivo = models.FileField
-    autor = models.ForeignKey(User,
-                              related_name='comcotauser',
-                              on_delete=models.PROTECT,
-                              # default=0,
-                              )
-    dt_com = models.DateTimeField(auto_now_add=True)
     fk_cota = models.ForeignKey(Cota, related_name='comcota', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.comentario
-
-    class Meta:
-        ordering = ('-dt_com',)
 
 
 class Assinatura(models.Model):

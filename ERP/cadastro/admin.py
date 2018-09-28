@@ -19,19 +19,12 @@ class EnderecoInline(admin.StackedInline):
 
 
 class ComPessoaInLine(admin.TabularInline):
-    fields = ['comentario']     # TODO , 'arquivo', 'user'
+    # TODO , 'arquivo', 'user'
     model = ComPessoa
     extra = 0
-    # TODO obrigar a ser o usuário atual
-    # TODO impedir edit
 
-    # def get_readonly_fields(self, request, obj=None):
-    #     if obj:
-    #         return ["comentario"]
-    #     else:
-    #         return []
-    # def get_formset(self, request, obj=None, **kwargs):
-    #   self.form.base_fields['autor'].initial = request.user.id
+    def has_change_permission(self, request, obj=None):
+        return False
 
 
 class CotaInLine(admin.TabularInline):
@@ -45,19 +38,9 @@ class PessoaAdmin(admin.ModelAdmin):
 
 
 class ComCotaInLine(admin.TabularInline):
-    fields = ['comentario', 'autor']     # TODO , 'arquivo', 'user'
+    # TODO , 'arquivo', 'user'
     model = ComCota
-    extra = 1
-
-    def get_formset(self, request, obj=None, **kwargs):
-        initial = []
-        if request.method == "GET":
-            initial.append({
-                'autor': request.user,
-            })
-        formset = super(ComCotaInLine, self).get_formset(request, obj, **kwargs)
-        formset.__init__ = curry(formset.__init__, initial=initial)
-        return formset
+    extra = 0
 
     def has_change_permission(self, request, obj=None):
         return False

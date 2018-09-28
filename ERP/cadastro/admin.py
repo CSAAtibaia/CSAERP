@@ -1,15 +1,17 @@
 # Register your models here.
 from django.contrib import admin
+from django.utils.functional import curry
 from .models import *
 
 
 class EnderecoInline(admin.StackedInline):
-    fields = ['tp_logradouro',
-              'logradouro',
-              'numero',
-              'bairro',
+    fields = [('tp_logradouro',
+              'logradouro',),
+              ('numero',
+              'complemento',),
+              ('bairro',
               'cidade',
-              'uf',
+              'uf',),
               'cep',
               ]
     model = Endereco
@@ -23,6 +25,14 @@ class ComPessoaInLine(admin.TabularInline):
     # TODO obrigar a ser o usuário atual
     # TODO impedir edit
 
+    # def get_readonly_fields(self, request, obj=None):
+    #     if obj:
+    #         return ["comentario"]
+    #     else:
+    #         return []
+    # def get_formset(self, request, obj=None, **kwargs):
+    #   self.form.base_fields['autor'].initial = request.user.id
+
 
 class CotaInLine(admin.TabularInline):
     fields = ['tipo', 'status', 'partilha', 'dt_ini', 'dt_validade']
@@ -35,11 +45,22 @@ class PessoaAdmin(admin.ModelAdmin):
 
 
 class ComCotaInLine(admin.TabularInline):
-    fields = ['comentario']     # TODO , 'arquivo', 'user'
+    fields = ['comentario', 'autor']     # TODO , 'arquivo', 'user'
     model = ComCota
-    extra = 0
-    # TODO obrigar a ser o usuário atual
-    # TODO impedir edit
+    extra = 1
+
+    def get_formset(self, request, obj=None, **kwargs):
+        initial = []
+        if request.method == "GET":
+            initial.append({
+                'autor': request.user,
+            })
+        formset = super(ComCotaInLine, self).get_formset(request, obj, **kwargs)
+        formset.__init__ = curry(formset.__init__, initial=initial)
+        return formset
+
+    def has_change_permission(self, request, obj=None):
+        return False
 
 
 class AssinaturaInline(admin.TabularInline):
@@ -49,13 +70,14 @@ class AssinaturaInline(admin.TabularInline):
 
 class CotaAdmin(admin.ModelAdmin):  # TODO adicionar tipo, status e partilha na listview
     inlines = [ComCotaInLine, AssinaturaInline]
+
     # default=Partilha.objects.filter(padrao=True),    # TODO colocar na view
 
 
 class PartilhaAdmin(admin.ModelAdmin):  # TODO adicionar tipo, status e partilha na listview
     inlines = [EnderecoInline]
-    fields = ['nome',
-              'padrao']
+    fields = [('nome',
+              'padrao')]
 
 
 admin.site.register(Pessoa, PessoaAdmin)

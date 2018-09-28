@@ -182,7 +182,8 @@ class ComCota(models.Model):
     autor = models.ForeignKey(User,
                               related_name='comcotauser',
                               on_delete=models.PROTECT,
-                              default=0)
+                              # default=0,
+                              )
     dt_com = models.DateTimeField(auto_now_add=True)
     fk_cota = models.ForeignKey(Cota, related_name='comcota', on_delete=models.CASCADE)
 

@@ -1,15 +1,17 @@
 # Register your models here.
 from django.contrib import admin
+from django.utils.functional import curry
 from .models import *
 
 
 class EnderecoInline(admin.StackedInline):
-    fields = ['tp_logradouro',
-              'logradouro',
-              'numero',
-              'bairro',
+    fields = [('tp_logradouro',
+              'logradouro',),
+              ('numero',
+              'complemento',),
+              ('bairro',
               'cidade',
-              'uf',
+              'uf',),
               'cep',
               ]
     model = Endereco
@@ -17,9 +19,12 @@ class EnderecoInline(admin.StackedInline):
 
 
 class ComPessoaInLine(admin.TabularInline):
-    fields = ['comentario']     # TODO , 'arquivo', 'user'
+    # TODO , 'arquivo', 'user'
     model = ComPessoa
     extra = 0
+
+    def has_change_permission(self, request, obj=None):
+        return False
 
 
 class CotaInLine(admin.TabularInline):
@@ -33,9 +38,12 @@ class PessoaAdmin(admin.ModelAdmin):
 
 
 class ComCotaInLine(admin.TabularInline):
-    fields = ['comentario']     # TODO , 'arquivo', 'user'
+    # TODO , 'arquivo', 'user'
     model = ComCota
     extra = 0
+
+    def has_change_permission(self, request, obj=None):
+        return False
 
 
 class AssinaturaInline(admin.TabularInline):
@@ -46,9 +54,13 @@ class AssinaturaInline(admin.TabularInline):
 class CotaAdmin(admin.ModelAdmin):  # TODO adicionar tipo, status e partilha na listview
     inlines = [ComCotaInLine, AssinaturaInline]
 
+    # default=Partilha.objects.filter(padrao=True),    # TODO colocar na view
+
 
 class PartilhaAdmin(admin.ModelAdmin):  # TODO adicionar tipo, status e partilha na listview
     inlines = [EnderecoInline]
+    fields = [('nome',
+              'padrao')]
 
 
 admin.site.register(Pessoa, PessoaAdmin)

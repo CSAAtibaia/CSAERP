@@ -1,6 +1,5 @@
 # Register your models here.
 from django.contrib import admin
-from django.utils.functional import curry
 from .models import *
 
 

@@ -35,6 +35,7 @@ class CotaInLine(admin.TabularInline):
 
 class PessoaAdmin(admin.ModelAdmin):
     inlines = [CotaInLine, ComPessoaInLine, EnderecoInline]
+    list_display = ('__str__', 'apelido', 'prim_nome', 'sobrenome')
 
 
 class ComCotaInLine(admin.TabularInline):
@@ -58,13 +59,18 @@ class CotaAdmin(admin.ModelAdmin):  # TODO adicionar tipo, status e partilha na 
     # default=Partilha.objects.filter(padrao=True),    # TODO colocar na view
 
 
-class PartilhaAdmin(admin.ModelAdmin):  # TODO adicionar tipo, status e partilha na listview
+class PartilhaAdmin(admin.ModelAdmin):
     inlines = [EnderecoInline]
     fields = [('nome',
               'padrao')]
+    list_display = ('nome', 'padrao')
+
+
+class ServicoAdmin(admin.ModelAdmin):
+    list_display = ('servico', 'valor', 'frequencia')
 
 
 admin.site.register(Pessoa, PessoaAdmin)
 admin.site.register(Cota, CotaAdmin)
-admin.site.register(Servico)
+admin.site.register(Servico, ServicoAdmin)
 admin.site.register(Partilha, PartilhaAdmin)
